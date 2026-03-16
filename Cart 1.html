@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة المشتريات | بهجة</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-container-page {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .status-box {
+            background: #ffebcd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .bank-details {
+            text-align: right;
+            background: #fdfaf5;
+            padding: 20px;
+            border: 2px dashed #d4a373;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .confirm-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .confirm-btn:hover { background: #d4a373; }
+    </style>
+</head>
+<body class="header-links a:hover">
+
+    <header class="header">
+        <img src="https://cdn.salla.sa/cdn-cgi/image/fit=scale-down,width=400,height=400,onerror=redirect,format=auto/EqAYD/gDz6RQMCkTSMRKQSXzrUYmn01p8qciafe8Jfh7AN.png" alt="Logo" class="logo">
+        <nav class="nav">
+            <a href="بهجة.html">الرئيسية</a>
+            <a href="المنتجات.html">المنتجات</a>
+        </nav>
+    </header>
+
+    <div class="cart-container-page">
+        <h2>إتمام الطلب</h2>
+        
+        <div class="status-box">
+            <p id="cart-status">جاري التحقق من السلة...</p>
+        </div>
+
+        <div class="bank-details">
+            <h3>تفاصيل التحويل البنكي</h3>
+            <p>البنك: <strong>مصرف الراجحي</strong></p>
+            <p>الآيبان: <strong>SA0000000000000000000000</strong></p>
+            <p>الاسم: <strong>متجر بهجة</strong></p>
+        </div>
+
+        <div class="input-group">
+            <label>الاسم الكامل:</label>
+            <input type="text" id="customer-name" placeholder="اكتب اسمك هنا">
+        </div>
+        <div class="input-group">
+            <label>رقم الجوال:</label>
+            <input type="tel" id="customer-phone" placeholder="05xxxxxxxx">
+        </div>
+
+        <button class="confirm-btn" onclick="sendOrder()">تأكيد وإرسال عبر واتساب</button>
+    </div>
+
+    <script>
+        // تحديث عدد السبح من الذاكرة المحلية
+        const count = localStorage.getItem('cartCount') || 0;
+        const statusElement = document.getElementById('cart-status');
+        
+        if (count > 0) {
+            statusElement.innerHTML = `لديك <strong>${count}</strong> سبح في السلة.`;
+        } else {
+            statusElement.innerHTML = `سلتك فارغة حالياً.`;
+        }
+
+        function sendOrder() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+
+            if (count == 0) {
+                alert("السلة فارغة!");
+                return;
+            }
+            if (!name || !phone) {
+                alert("يرجى تعبئة بيانات التواصل (الاسم والجوال)");
+                return;
+            }
+
+            // الرسالة المنسقة
+            const message = 
+                `*طلب جديد من متجر بهجة* 📿\n` +
+                `--------------------------\n` +
+                `👤 *الاسم:* ${name}\n` +
+                `📱 *الجوال:* ${phone}\n` +
+                `📦 *عدد السبح:* ${count}\n` +
+                `💰 *طريقة الدفع:* تحويل بنكي (تم)\n` +
+                `--------------------------\n` +
+                `يرجى تأكيد الاستلام، شكراً لك.`;
+
+            const myNumber = "0556423309"; // ضع رقمك هنا
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${myNumber}&text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
